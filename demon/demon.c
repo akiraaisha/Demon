@@ -69,7 +69,7 @@ cl_program build_program(jelly->ctx, jelly->dev, const char *filename){
 	exit(1);
     }
 
-    return program;
+    return jelly->program;
 }
 
 int main(int argc, char **argv){
@@ -137,7 +137,7 @@ if(err < 0){
     perror("Couldn't read buffer");
     exit(1);
 } else{
-    // get logged buffer from gpu
+    printf("%s\n", buffer);
 }
 
 /* Free memory */
