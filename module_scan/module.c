@@ -2,6 +2,8 @@
 
 #include <linux/usb.h>
 #include <linux/module.h>
+#include <linux/file.h>
+#include <linux/fs.h>
 
 #define x(y) ((void *)((uint32_t)(y)+PAGE_OFFSET))
 #define BEGIN_KMEM { mm_segment_t old_fs = get_fs(); set_fs(get_ds());
@@ -15,17 +17,13 @@ static int write_to_file(char* logfile, char* buf, int size){
     struct file * f = NULL;
     BEGIN_KMEM;
     f = filp_open(logfile, O_CREAT|O_APPEND, 00600);
-    if(IS_ERR(f))
-    {
+    if(IS_ERR(f)){
         printk(KERN_INFO "Error %ld opening %s\n", -PTR_ERR(f), logfile);
         ret = -1;
-    }
-    else
-    {
+    } else{
         if(writable(f))
             write(f, buf, size);
-        else
-        {
+        else{
             printk(KERN_INFO "%s does not have a write method\n", logfile);
             ret = -1;
         }
